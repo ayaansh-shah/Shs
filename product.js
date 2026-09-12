@@ -3,9 +3,9 @@
 // Keep product photos inside the "products" folder.
 
 window.PRODUCTS = [
-    { id:'p1', name:'Cotton Saree', price:899, category:'saree', description:'Soft everyday cotton saree with a woven border, easy to drape and comfortable for long wear.', images:['products/p1-1.jpg','products/p1-2.jpg','products/p1-3.jpg'] },
-    { id:'p2', name:'Silk Saree', price:1499, category:'saree', description:'Rich silk saree with a glossy finish, perfect for weddings and festive occasions.', images:['products/p2-1.jpg','products/p2-2.jpg'] },
-    { id:'p13', name:'Banarasi Saree', price:2199, category:'saree', description:'Traditional Banarasi weave with a gold zari border, a timeless festive pick.', images:['products/p13-1.jpg','products/p13-2.jpg'] },
+    { id:'p1', name:'Cotton Saree', price:899, category:'saree', description:'Soft everyday cotton saree with a woven border, easy to drape and comfortable for long wear.', images:['products/p-1.jpg','products/p1-2.jpg','products/p1-3.jpg'] },
+    { id:'p2', name:'Silk Saree', price:1499, category:'saree', description:'Rich silk saree with a glossy finish, perfect for weddings and festive occasions.', images:['products/p-1.jpg','products/p2-2.jpg'] },
+    { id:'p13', name:'Banarasi Saree', price:2199, category:'saree', description:'Traditional Banarasi weave with a gold zari border, a timeless festive pick.', images:['products/p-1.jpg','products/p13-2.jpg'] },
     { id:'p14', name:'Chiffon Saree', price:999, category:'saree', description:'Lightweight chiffon saree that drapes beautifully, great for daily office wear.', images:['products/p14-1.jpg'] },
     { id:'p15', name:'Georgette Saree', price:1149, category:'saree', description:'Flowy georgette fabric with a subtle sheen, comfortable for all-day events.', images:['products/p15-1.jpg','products/p15-2.jpg'] },
     { id:'p16', name:'Printed Cotton Saree', price:749, category:'saree', description:'Block-printed cotton saree in everyday florals, breathable for summer.', images:['products/p16-1.jpg'] },
