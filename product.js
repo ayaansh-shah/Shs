@@ -1,3 +1,4 @@
+window.PRODUCTS = [
 {
   id: "p1",
   name: "Cotton Saree",
@@ -356,135 +357,136 @@
   images: ["products/p-1.jpg", "products/p1-2.jpg", "products/p1-3.jpg"]
 },
 {
-  id: "p2",
+  id: "p52",
   name: "Silk Kurti",
   price: 549,
   category: "kurti",
   images: ["products/p2-1.jpg", "products/p2-2.jpg"]
 },
 {
-  id: "p1",
+  id: "p53",
   name: "Cotton Saree",
   price: 899,
   category: "saree",
   images: ["products/p1-1.jpg", "products/p1-2.jpg", "products/p1-3.jpg"]
 },
 {
-  id: "p2",
+  id: "p54",
   name: "Silk Kurti",
   price: 549,
   category: "kurti",
   images: ["products/p2-1.jpg", "products/p2-2.jpg"]
 },
 {
-  id: "p1",
+  id: "p55",
   name: "Cotton Saree",
   price: 899,
   category: "saree",
   images: ["products/p1-1.jpg", "products/p1-2.jpg", "products/p1-3.jpg"]
 },
 {
-  id: "p2",
+  id: "p56",
   name: "Silk Kurti",
   price: 549,
   category: "kurti",
   images: ["products/p2-1.jpg", "products/p2-2.jpg"]
 },
 {
-  id: "p1",
+  id: "p57",
   name: "Cotton Saree",
   price: 899,
   category: "saree",
   images: ["products/p1-1.jpg", "products/p1-2.jpg", "products/p1-3.jpg"]
 },
 {
-  id: "p2",
+  id: "p58",
   name: "Silk Kurti",
   price: 549,
   category: "kurti",
   images: ["products/p2-1.jpg", "products/p2-2.jpg"]
 },
 {
-  id: "p1",
+  id: "p59",
   name: "Cotton Saree",
   price: 899,
   category: "saree",
   images: ["products/p1-1.jpg", "products/p1-2.jpg", "products/p1-3.jpg"]
 },
 {
-  id: "p2",
+  id: "p60",
   name: "Silk Kurti",
   price: 549,
   category: "kurti",
   images: ["products/p2-1.jpg", "products/p2-2.jpg"]
 },
 {
-  id: "p1",
+  id: "p61",
   name: "Cotton Saree",
   price: 899,
   category: "saree",
   images: ["products/p1-1.jpg", "products/p1-2.jpg", "products/p1-3.jpg"]
 },
 {
-  id: "p2",
+  id: "p62",
   name: "Silk Kurti",
   price: 549,
   category: "kurti",
   images: ["products/p2-1.jpg", "products/p2-2.jpg"]
 },
 {
-  id: "p1",
+  id: "p63",
   name: "Cotton Saree",
   price: 899,
   category: "saree",
   images: ["products/p1-1.jpg", "products/p1-2.jpg", "products/p1-3.jpg"]
 },
 {
-  id: "p2",
+  id: "p64",
   name: "Silk Kurti",
   price: 549,
   category: "kurti",
   images: ["products/p2-1.jpg", "products/p2-2.jpg"]
 },
 {
-  id: "p1",
+  id: "p65",
   name: "Cotton Saree",
   price: 899,
   category: "saree",
   images: ["products/p1-1.jpg", "products/p1-2.jpg", "products/p1-3.jpg"]
 },
 {
-  id: "p2",
+  id: "p66",
   name: "Silk Kurti",
   price: 549,
   category: "kurti",
   images: ["products/p2-1.jpg", "products/p2-2.jpg"]
 },
 {
-  id: "p1",
+  id: "p67",
   name: "Cotton Saree",
   price: 899,
   category: "saree",
   images: ["products/p1-1.jpg", "products/p1-2.jpg", "products/p1-3.jpg"]
 },
 {
-  id: "p2",
+  id: "p68",
   name: "Silk Kurti",
   price: 549,
   category: "kurti",
   images: ["products/p2-1.jpg", "products/p2-2.jpg"]
 },
 {
-  id: "p1",
+  id: "p69",
   name: "Cotton Saree",
   price: 899,
   category: "saree",
   images: ["products/p1-1.jpg", "products/p1-2.jpg", "products/p1-3.jpg"]
 },
 {
-  id: "p2",
+  id: "p70",
   name: "Silk Kurti",
   price: 549,
   category: "kurti",
   images: ["products/p2-1.jpg", "products/p2-2.jpg"]
 }
+];
