@@ -4,6 +4,7 @@ window.PRODUCTS = [
   name: "Cotton Saree",
   price: 899,
   category: "saree",
+  subcategory: "jeans",
   images: ["products/p-1.jpg", "products/p1-2.jpg", "products/p1-3.jpg"]
 },
 {
@@ -11,6 +12,7 @@ window.PRODUCTS = [
   name: "Silk Kurti",
   price: 549,
   category: "kurti",
+  subcategory: "shirt",
   images: ["products/p-1.jpg", "products/p2-2.jpg"]
 },
 {
@@ -18,6 +20,7 @@ window.PRODUCTS = [
   name: "Cotton Saree",
   price: 899,
   category: "saree",
+  subcategory: "kurta",
   images: ["products/p-1.jpg", "products/p1-2.jpg", "products/p1-3.jpg"]
 },
 {
@@ -25,6 +28,7 @@ window.PRODUCTS = [
   name: "Silk Kurti",
   price: 549,
   category: "kurti",
+  subcategory: "denim",
   images: ["products/p-1.jpg", "products/p2-2.jpg"]
 },
 {
