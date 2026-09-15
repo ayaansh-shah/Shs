@@ -37,7 +37,7 @@ window.PRODUCTS = [
         name: 'Banarasi Silk Saree',
         price: 3499,
         description: 'Rich Banarasi silk saree with woven zari border, perfect for festive occasions.',
-        images: ['saree-1.jpg', 'saree-2.jpg'],
+        images: ['p-1.jpg', 'saree-2.jpg'],
         bestSeller: true
     },
     {
@@ -47,7 +47,7 @@ window.PRODUCTS = [
         name: 'Handloom Cotton Saree',
         price: 1299,
         description: 'Light and breathable handloom cotton saree for everyday elegance.',
-        images: ['saree-3.jpg', 'saree-4.jpg']
+        images: ['p-1.jpg', 'saree-4.jpg']
     },
 
     // ---------- LEHENGA ----------
