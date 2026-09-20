@@ -595,6 +595,18 @@ body[data-page="product"] #toasts{bottom:90px}
 
 .chip .sw{margin-right:6px}
 
+/* install help page */
+.inst{max-width:640px;margin-top:18px}
+.inst h3{font-family:var(--serif);font-size:20px;margin:26px 0 10px}
+.inst-steps{padding-left:20px;display:grid;gap:8px;color:var(--text2);font-size:14px;line-height:1.6}
+.chk{list-style:none;display:grid;gap:8px}
+.chk li{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border-radius:14px;background:var(--soft)}
+.chk .ck{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;flex-shrink:0;color:#fff;background:#0c8a5f}
+.chk .bad .ck{background:var(--warn)}
+.chk .info .ck{background:#9a9ca3}
+.chk b{font-size:14px;font-weight:600}
+.chk small{display:block;color:var(--muted);font-size:12.5px;margin-top:2px;line-height:1.5}
+
 </style>
 </head>
 <body data-page="home">
@@ -1635,6 +1647,8 @@ function route(){
     updateChrome('product', p ? p.category : '');
   } else if(page === 'wishlist'){
     currentPage = 'wishlist'; renderWishlist(); updateChrome('wishlist');
+  } else if(page === 'install'){
+    currentPage = 'install'; renderInstall(); updateChrome('install');
   } else if(page === 'orders'){
     currentPage = 'orders'; renderOrders(); updateChrome('orders');
   } else {
@@ -1958,6 +1972,79 @@ function renderOrders(){
       '<div class="empty"><div class="ico">' + ic('box', 26) + '</div><h3>No orders yet</h3><p>Once you place an order it will show up here.</p><a class="btn btn-dark" href="#/shop/all">Start shopping</a></div>') + '</section>';
 }
 
+/* ---------- install help + self-check page (open  #/install) ---------- */
+function renderInstall(){
+  document.title = 'Install app | Radhe Radhe';
+  app.innerHTML = '<section class="wrap page"><div class="page-head"><h1>Install the app</h1><p>Add Radhe Radhe to your home screen and open it like a normal app.</p></div>' +
+    '<div class="inst">' +
+    (deferredInstall ? '<div style="margin-top:18px"><button class="btn btn-dark" data-act="install" style="height:50px">' + ic('download', 18) + ' Install now</button></div>' : '') +
+    (isStandalone ? '<p class="cmsg ok" style="margin-top:16px">The app is already installed on this device.</p>' : '') +
+    '<h3>How to install</h3><ol class="inst-steps">' +
+      '<li><b>Android (Chrome):</b> tap the ⋮ menu at the top right, then tap <b>Install app</b>.</li>' +
+      '<li><b>Computer (Chrome):</b> click the install icon at the right end of the address bar.</li>' +
+      '<li><b>iPhone (Safari):</b> tap the Share button, then <b>Add to Home Screen</b>.</li>' +
+    '</ol>' +
+    '<h3>Self-check</h3><ul class="chk" id="chk"><li class="info"><span class="ck">' + ic('minus', 14) + '</span><div><b>Checking…</b></div></li></ul>' +
+    '</div></section>';
+  runInstallChecks();
+}
+function runInstallChecks(){
+  var ua = navigator.userAgent, out = [];
+  function add(ok, title, help){ out.push({ ok: ok, title: title, help: help || '' }); }
+  var inApp = /Instagram|FBAN|FBAV|FB_IAB|MicroMessenger|WhatsApp|Snapchat|Telegram|; wv\)/i.test(ua);
+  var https = location.protocol === 'https:' || /^(localhost|127\.0\.0\.1)$/.test(location.hostname);
+  add(https, https ? 'Secure page (https)' : 'Page is not https', 'Open the site with its https:// link. Installing needs https.');
+  add(!inApp, inApp ? 'Opened inside another app' : 'Opened in a normal browser', 'Open this link in Chrome. Browsers inside Instagram, WhatsApp or Facebook cannot install apps.');
+  var link = document.querySelector('link[rel="manifest"]');
+  var pManifest = new Promise(function(resolve){
+    if(!link){ add(false, 'Manifest link missing', 'index.html must have the manifest line in the head.'); return resolve(); }
+    fetch(link.href, { cache: 'no-store' }).then(function(r){
+      if(!r.ok){ throw new Error('HTTP ' + r.status); }
+      return r.json();
+    }).then(function(m){
+      add(true, 'manifest.webmanifest found');
+      add(!!(m.name || m.short_name) && !!m.start_url, 'App name and start page set', 'Open manifest.webmanifest and check name and start_url.');
+      add(['standalone', 'fullscreen', 'minimal-ui'].indexOf(m.display) > -1, 'Opens like an app (display: standalone)', 'Set "display": "standalone" in manifest.webmanifest.');
+      var icons = Array.isArray(m.icons) ? m.icons : [];
+      var has = function(n){ return icons.some(function(i){ return String(i.sizes || '').split(' ').indexOf(n + 'x' + n) > -1; }); };
+      add(has(192) && has(512), 'Icons 192 and 512 listed', 'The manifest needs icon-192.png and icon-512.png.');
+      return Promise.all(icons.slice(0, 3).map(function(i){
+        return new Promise(function(res){
+          var im = new Image();
+          im.onload = function(){ res({ src: i.src, ok: true }); };
+          im.onerror = function(){ res({ src: i.src, ok: false }); };
+          im.src = new URL(i.src, link.href).href;
+        });
+      })).then(function(rs){
+        rs.forEach(function(r){ add(r.ok, r.ok ? r.src + ' loads' : r.src + ' not found', 'Upload ' + r.src + ' to the same folder as index.html and check the spelling.'); });
+      });
+    }).catch(function(e){
+      add(false, 'manifest.webmanifest not found (' + e.message + ')', 'Upload manifest.webmanifest to the same folder as index.html. Check the file name is exactly manifest.webmanifest (not .txt).');
+    }).then(resolve);
+  });
+  var pSW = new Promise(function(resolve){
+    if(!('serviceWorker' in navigator)){ add(false, 'Service worker not supported here', 'Use Chrome.'); return resolve(); }
+    navigator.serviceWorker.getRegistration().then(function(reg){
+      if(reg && (reg.active || reg.waiting || reg.installing)){ add(true, 'Service worker (sw.js) is running'); return; }
+      return fetch('./sw.js', { cache: 'no-store' }).then(function(r){
+        add(false, r.ok ? 'Service worker not started yet' : 'sw.js not found (HTTP ' + r.status + ')', r.ok ? 'Refresh this page once, then check again.' : 'Upload sw.js to the same folder as index.html.');
+      });
+    }).catch(function(){ add(false, 'Service worker check failed', 'Refresh the page and try again.'); }).then(resolve);
+  });
+  Promise.all([pManifest, pSW]).then(function(){
+    if(isStandalone){ add(null, 'Already installed on this device', 'Chrome does not show the install option for an app that is already installed.'); }
+    else if(deferredInstall){ add(true, 'Chrome is ready to install this app', 'Use the Install now button above.'); }
+    else { add(null, 'Chrome has not offered the install prompt yet', 'If every line above is ticked, open Chrome\u2019s ⋮ menu and tap Install app. Chrome also stays quiet if you dismissed it before or it is already installed.'); }
+    var box = document.getElementById('chk');
+    if(!box){ return; }
+    box.innerHTML = out.map(function(o){
+      var cls = o.ok === true ? 'ok' : (o.ok === false ? 'bad' : 'info');
+      var icon = o.ok === true ? 'check' : (o.ok === false ? 'x' : 'minus');
+      return '<li class="' + cls + '"><span class="ck">' + ic(icon, 14) + '</span><div><b>' + esc(o.title) + '</b>' + (o.ok !== true && o.help ? '<small>' + esc(o.help) + '</small>' : '') + '</div></li>';
+    }).join('');
+  });
+}
+
 /* ================================================================
    10. OVERLAY CONTENT
 ================================================================ */
@@ -1965,7 +2052,7 @@ function renderOrders(){
 function renderMenu(){
   var cats = CAT_KEYS.map(function(k){ return '<a href="#/shop/' + k + '"><span class="th">' + media(CATS[k].png, CATS[k].label, k) + '</span>' + esc(CATS[k].label) + '</a>'; }).join('');
   $('#ov-menu .ov-body').innerHTML =
-    (canInstall() ? '<div class="menu-list"><button data-act="install">' + ic('download', 20) + 'Install app</button></div>' : '') +
+    (!isStandalone ? '<div class="menu-list"><button data-act="install">' + ic('download', 20) + 'Install app</button></div>' : '') +
     '<div class="menu-list"><a href="#/">' + ic('home', 20) + 'Home</a><a href="#/shop/all">' + ic('grid', 20) + 'All products</a><a href="#/wishlist">' + ic('heart', 20) + 'Wishlist</a><a href="#/orders">' + ic('box', 20) + 'My orders</a></div>' +
     '<p class="menu-h">Collections</p><div class="menu-list menu-coll">' + cats + '</div>' +
     '<p class="menu-h">Contact</p><div class="menu-list"><a href="#/contact">' + ic('pin', 20) + 'Visit our store</a><a href="tel:' + SHOP.phones[0] + '">' + ic('phone', 20) + SHOP.phones[0] + '</a><a href="' + waLink('Hi Radhe Radhe') + '" target="_blank" rel="noopener">' + icWA(20) + 'WhatsApp</a><a href="https://instagram.com/' + esc(SHOP.instagram) + '" target="_blank" rel="noopener">' + icIG(20) + '@' + esc(SHOP.instagram) + '</a></div>';
@@ -2067,7 +2154,7 @@ function renderAccount(){
   } else {
     top = '<div class="gate" style="padding:6px 0 10px"><div class="ico">' + ic('user', 30) + '</div><h3>Shopping as guest</h3><p>Your cart, wishlist and orders are saved on this device. No sign-in needed.</p></div>';
   }
-  P.innerHTML = head + '<div class="p-body">' + top + '<div class="menu-list">' + (canInstall() ? '<button data-act="install">' + ic('download', 20) + 'Install app</button>' : '') + '<button data-act="go" data-href="#/orders">' + ic('box', 20) + 'My orders</button><button data-act="go" data-href="#/wishlist">' + ic('heart', 20) + 'Wishlist</button><a href="' + waLink('Hi Radhe Radhe') + '" target="_blank" rel="noopener">' + icWA(20) + 'Chat with us</a>' + (user ? '<button data-act="signout">' + ic('logout', 20) + 'Sign out</button>' : '') + '</div></div>';
+  P.innerHTML = head + '<div class="p-body">' + top + '<div class="menu-list">' + (!isStandalone ? '<button data-act="install">' + ic('download', 20) + 'Install app</button>' : '') + '<button data-act="go" data-href="#/orders">' + ic('box', 20) + 'My orders</button><button data-act="go" data-href="#/wishlist">' + ic('heart', 20) + 'Wishlist</button><a href="' + waLink('Hi Radhe Radhe') + '" target="_blank" rel="noopener">' + icWA(20) + 'Chat with us</a>' + (user ? '<button data-act="signout">' + ic('logout', 20) + 'Sign out</button>' : '') + '</div></div>';
   if(!user){ renderGoogleButton($('#g-acct')); }
 }
 
@@ -2362,6 +2449,7 @@ function canInstall(){ return !isStandalone && (!!deferredInstall || isIOS); }
 function refreshInstallUI(){
   if(activeOv === 'menu'){ renderMenu(); }
   if(activeOv === 'account'){ renderAccount(); }
+  if(currentPage === 'install' && !activeOv){ renderInstall(); }
 }
 function showInstallBar(){
   if(isStandalone || !canInstall() || $('#install-bar')){ return; }
@@ -2381,12 +2469,13 @@ function hideInstallBar(remember){
   if(remember){ store.set('rrs_inst_dismiss', Date.now()); }
 }
 function doInstall(){
+  hideInstallBar();
   if(deferredInstall){
     var ev = deferredInstall;
     ev.prompt();
-    ev.userChoice.then(function(){ deferredInstall = null; hideInstallBar(); refreshInstallUI(); });
-  } else if(isIOS){
-    toast('Tap the Share button, then “Add to Home Screen”', 5500);
+    ev.userChoice.then(function(){ deferredInstall = null; refreshInstallUI(); });
+  } else {
+    goto('#/install');
   }
 }
 window.addEventListener('beforeinstallprompt', function(e){
